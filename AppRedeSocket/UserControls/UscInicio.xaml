@@ -47,7 +47,7 @@
                          x:Name="txtIp"
                          Grid.Column="1" 
                          Foreground="#FFE5E6D9"
-                         Background="#FF2D2D30" FontSize="15">
+                         Background="#FF2D2D30" FontSize="20">
                     abc
                 </TextBox>
 
@@ -66,7 +66,7 @@
                          x:Name="txtNome"
                          Grid.Column="1" 
                          Foreground="#FFE5E6D9"
-                         Background="#FF2D2D30" FontSize="15">
+                         Background="#FF2D2D30" FontSize="20">
                     abc
                 </TextBox>
 
@@ -87,13 +87,20 @@
                          Grid.Column="3" 
                          x:Name="txtPorta"
                          Foreground="#FFE5E6D9"
-                         Background="#FF2D2D30" FontSize="15">
+                         Background="#FF2D2D30" FontSize="20">
                     abc
                 </TextBox>
 
 
                 <!--BOTÃO CONECTAR-->
-                <Border Grid.Row="1" Grid.Column="4" Width="200" HorizontalAlignment="Right" Background="#FF58AB65" CornerRadius="15">
+                <Border 
+                    x:Name="brdConectar"
+                    Grid.Row="1" 
+                    Grid.Column="4" 
+                    Width="200" 
+                    HorizontalAlignment="Right" 
+                    Background="#FF58AB65" 
+                    CornerRadius="15" MouseUp="brdConectar_MouseUp">
                     <TextBlock Foreground="White" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center">Conectar</TextBlock>
                 </Border>
                 <!--BOTÃO DESCONECTAR-->

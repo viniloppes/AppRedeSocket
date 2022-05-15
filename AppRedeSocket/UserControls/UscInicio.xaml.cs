@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AppRedeSocket.CLASSES;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -36,7 +37,15 @@ namespace AppRedeSocket.UserControls
 
         public void Finaliza()
         {
+            try
+            {
 
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show("Error", ex.Message, MessageBoxButton.OK);
+            }
         }
         public void EnviaMensagem()
         {
@@ -83,6 +92,21 @@ namespace AppRedeSocket.UserControls
             catch (Exception ex)
             {
                 MessageBox.Show("Error", ex.Message, MessageBoxButton.OK);
+            }
+        }
+
+        private void brdConectar_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                ServerSocketConnection.SetupServer(txtIp.Text, int.Parse(txtPorta.Text));
+                ClientSocketConnection.ConnectToServer(txtIp.Text, int.Parse(txtPorta.Text));
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show("Error", ex.Message, MessageBoxButton.OK);
+
             }
         }
     }

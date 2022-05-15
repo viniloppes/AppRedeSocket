@@ -17,18 +17,18 @@ namespace AppRedeSocket.CLASSES
         private const int PORT = 100;
         private static readonly byte[] buffer = new byte[BUFFER_SIZE];
 
-        static void Main()
-        {
-            //Console.Title = "Server";
-            //SetupServer();
-            /*Console.ReadLine();*/ // When we press enter close everything
-            CloseAllSockets();
-        }
+        //public static void Main()
+        //{
+        //    //Console.Title = "Server";
+        //    //SetupServer();
+        //    /*Console.ReadLine();*/ // When we press enter close everything
+        //    CloseAllSockets();
+        //}
 
         public static void SetupServer(string ipAddress, int port)
         {
             //Console.WriteLine("Setting up server...");
-            serverSocket.Bind(new IPEndPoint(IPAddress.Parse(ipAddress), port));
+            serverSocket.Bind(new IPEndPoint(IPAddress.Any, port));
             serverSocket.Listen(0);
             serverSocket.BeginAccept(AcceptCallback, null);
             //Console.WriteLine("Server setup complete");
@@ -38,7 +38,7 @@ namespace AppRedeSocket.CLASSES
         /// Close all connected client (we do not need to shutdown the server socket as its connections
         /// are already closed with the clients).
         /// </summary>
-        private static void CloseAllSockets()
+        public static void CloseAllSockets()
         {
             foreach (Socket socket in clientSockets)
             {
