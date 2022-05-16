@@ -16,12 +16,12 @@
             <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="50*"/>
-                    <RowDefinition Height="321*"/>
-                    <RowDefinition Height="19*"/>
+                    <RowDefinition Height="272*"/>
+                    <RowDefinition Height="67*"/>
                 </Grid.RowDefinitions>
-                <Image Margin="10,10,0,10" x:Name="imgVoltar" HorizontalAlignment="Left" Source="/Socket;component/Imagens/seta.png" MouseUp="imgVoltar_MouseUp" Width="30"/>
+                <Image Margin="10,10,0,10.4" x:Name="imgVoltar" HorizontalAlignment="Left"  MouseUp="imgVoltar_MouseUp" Width="30" Source="/AppRedeSocket;component/Imagens/seta.png"/>
 
-                <Grid>
+                <Grid Margin="0,0,0,0.4">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="3*"/>
                         <ColumnDefinition Width="30*"/>
@@ -47,7 +47,7 @@
                 </Grid>
 
                 <!--GRID LOG SERVIDOR-->
-                <Grid Grid.Row="1" >
+                <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="40*"/>
                         <ColumnDefinition Width="361*"/>
@@ -106,6 +106,7 @@
                     </Grid>
 
                 </Grid>
+                <Image Grid.Row="2" x:Name="imgOff" Margin="10" Source="/AppRedeSocket;component/Imagens/power-off.png" MouseUp="imgOff_MouseUp"></Image>
             </Grid>
         </Grid>
     </Grid>

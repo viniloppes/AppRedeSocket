@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -99,13 +100,32 @@ namespace AppRedeSocket.UserControls
         {
             try
             {
-                ServerSocketConnection.SetupServer(txtIp.Text, int.Parse(txtPorta.Text));
-                ClientSocketConnection.ConnectToServer(txtIp.Text, int.Parse(txtPorta.Text));
+                //Inicializa SERVIDOR
+                DadosGerais.serverSocketConnection = new ServerSocketConnection(
+                    new Socket(
+                        AddressFamily.InterNetwork,
+                        SocketType.Stream, ProtocolType.Tcp)
+                    );
+                DadosGerais.serverSocketConnection.SetupServer(txtIp.Text, txtPorta.Text);
+
+
+                //ServerSocketConnection.SetupServer(txtIp.Text, txtPorta.Text);
+
+                //INICIALIZAÇÃO DA CONECÇÃO DO CLIENTE
+                DadosGerais.
+                    clientSocketConnection =
+                    new ClientSocketConnection(
+                        new Socket
+                        (AddressFamily.InterNetwork,
+                        SocketType.Stream, ProtocolType.Tcp));
+
+                DadosGerais.clientSocketConnection.ConnectToServer(txtIp.Text, int.Parse(txtPorta.Text));
+                DadosGerais.clientSocketConnection.RequestLoop();
             }
             catch (Exception ex)
             {
-
-                MessageBox.Show("Error", ex.Message, MessageBoxButton.OK);
+                DadosGerais.serverSocketConnection.CloseAllSockets();
+                MessageBox.Show(ex.Message, "Error",  MessageBoxButton.OK);
 
             }
         }

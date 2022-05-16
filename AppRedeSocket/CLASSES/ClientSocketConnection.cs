@@ -8,10 +8,18 @@ using System.Threading.Tasks;
 
 namespace AppRedeSocket.CLASSES
 {
-    public static class ClientSocketConnection
+    public class ClientSocketConnection
     {
-        private static readonly Socket ClientSocket = new Socket
-           (AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        public Socket _clientSocketServer { get; set; }
+        
+
+        public ClientSocketConnection(Socket socketServer)
+        {
+            _clientSocketServer = socketServer;
+        }
+
+
+
 
         //private const int PORT = 100;
 
@@ -23,18 +31,18 @@ namespace AppRedeSocket.CLASSES
         //    Exit();
         //}
 
-        public static bool ConnectToServer(string ipAddress, int porta)
+        public bool ConnectToServer(string ipAddress, int porta)
         {
             int tentativas = 0;
 
-            while (!ClientSocket.Connected)
+            while (!_clientSocketServer.Connected)
             {
                 try
                 {
                     tentativas++;
-                    
+
                     // Change IPAddress.Loopback to a remote IP to connect to a remote host.
-                    ClientSocket.Connect(IPAddress.Parse(ipAddress), porta);
+                    _clientSocketServer.Connect(IPAddress.Parse(ipAddress), porta);
                 }
                 catch (SocketException)
                 {
@@ -48,29 +56,29 @@ namespace AppRedeSocket.CLASSES
             return true;
         }
 
-        private static void RequestLoop()
+        public void RequestLoop()
         {
             //Console.WriteLine(@"<Type ""exit"" to properly disconnect client>");
 
-            while (true)
-            {
-                //SendRequest();
-                ReceiveResponse();
-            }
+            //while (true)
+            //{
+            SendRequest("abc");
+            ReceiveResponse();
+            //}
         }
 
         /// <summary>
         /// Close socket and exit program.
         /// </summary>
-        private static void Exit()
+        private void Exit()
         {
             SendString("exit"); // Tell the server we are exiting
-            ClientSocket.Shutdown(SocketShutdown.Both);
-            ClientSocket.Close();
+            _clientSocketServer.Shutdown(SocketShutdown.Both);
+            _clientSocketServer.Close();
             //Environment.Exit(0);
         }
 
-        public static void SendRequest(string mensagem)
+        public void SendRequest(string mensagem)
         {
             //Console.Write("Send a request: ");
             //string request = Console.ReadLine();
@@ -85,16 +93,16 @@ namespace AppRedeSocket.CLASSES
         /// <summary>
         /// Sends a string to the server with ASCII encoding.
         /// </summary>
-        private static void SendString(string text)
+        private void SendString(string text)
         {
             byte[] buffer = Encoding.ASCII.GetBytes(text);
-            ClientSocket.Send(buffer, 0, buffer.Length, SocketFlags.None);
+            _clientSocketServer.Send(buffer, 0, buffer.Length, SocketFlags.None);
         }
 
-        public static string ReceiveResponse()
+        public string ReceiveResponse()
         {
             var buffer = new byte[2048];
-            int received = ClientSocket.Receive(buffer, SocketFlags.None);
+            int received = _clientSocketServer.Receive(buffer, SocketFlags.None);
             if (received == 0) return "";
             var data = new byte[received];
             Array.Copy(buffer, data, received);

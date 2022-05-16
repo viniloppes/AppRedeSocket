@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AppRedeSocket.CLASSES;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -38,7 +39,7 @@ namespace AppRedeSocket.UserControls
             catch (Exception ex)
             {
 
-                MessageBox.Show("Error", ex.Message, MessageBoxButton.OK);
+                MessageBox.Show(ex.Message, "Error",  MessageBoxButton.OK);
             }
         }
 
@@ -50,7 +51,7 @@ namespace AppRedeSocket.UserControls
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error", ex.Message, MessageBoxButton.OK);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
             }
 
         }
@@ -66,7 +67,21 @@ namespace AppRedeSocket.UserControls
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error", ex.Message, MessageBoxButton.OK);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
+            }
+        }
+
+        private void imgOff_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+
+                DadosGerais.serverSocketConnection.CloseAllSockets();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
+
             }
         }
     }

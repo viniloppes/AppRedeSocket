@@ -8,14 +8,21 @@ using System.Threading.Tasks;
 
 namespace AppRedeSocket.CLASSES
 {
-    public static class ServerSocketConnection
+    public class ServerSocketConnection
     {
+        public Socket _socketServer { get; set; }
 
-        private static readonly Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         private static readonly List<Socket> clientSockets = new List<Socket>();
         private const int BUFFER_SIZE = 2048;
-        private const int PORT = 100;
         private static readonly byte[] buffer = new byte[BUFFER_SIZE];
+
+        public ServerSocketConnection(Socket socketServer)
+        {
+            _socketServer = socketServer;
+        }
+
+
+
 
         //public static void Main()
         //{
@@ -25,12 +32,12 @@ namespace AppRedeSocket.CLASSES
         //    CloseAllSockets();
         //}
 
-        public static void SetupServer(string ipAddress, int port)
+        public void SetupServer(string ipAddress, string port)
         {
             //Console.WriteLine("Setting up server...");
-            serverSocket.Bind(new IPEndPoint(IPAddress.Any, port));
-            serverSocket.Listen(0);
-            serverSocket.BeginAccept(AcceptCallback, null);
+            _socketServer.Bind(new IPEndPoint(IPAddress.Parse(ipAddress), int.Parse(port)));
+            _socketServer.Listen(0);
+            _socketServer.BeginAccept(AcceptCallback, null);
             //Console.WriteLine("Server setup complete");
         }
 
@@ -38,7 +45,7 @@ namespace AppRedeSocket.CLASSES
         /// Close all connected client (we do not need to shutdown the server socket as its connections
         /// are already closed with the clients).
         /// </summary>
-        public static void CloseAllSockets()
+        public void CloseAllSockets()
         {
             foreach (Socket socket in clientSockets)
             {
@@ -46,16 +53,16 @@ namespace AppRedeSocket.CLASSES
                 socket.Close();
             }
 
-            serverSocket.Close();
+            _socketServer.Close();
         }
 
-        private static void AcceptCallback(IAsyncResult AR)
+        private void AcceptCallback(IAsyncResult AR)
         {
             Socket socket;
 
             try
             {
-                socket = serverSocket.EndAccept(AR);
+                socket = _socketServer.EndAccept(AR);
             }
             catch (ObjectDisposedException) // I cannot seem to avoid this (on exit when properly closing sockets)
             {
@@ -63,9 +70,10 @@ namespace AppRedeSocket.CLASSES
             }
 
             clientSockets.Add(socket);
+            DadosGerais.clientSockets.Add(socket);
             socket.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, socket);
             //Console.WriteLine("Client connected, waiting for request...");
-            serverSocket.BeginAccept(AcceptCallback, null);
+            _socketServer.BeginAccept(AcceptCallback, null);
         }
 
         private static void ReceiveCallback(IAsyncResult AR)

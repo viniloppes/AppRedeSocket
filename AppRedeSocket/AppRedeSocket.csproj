@@ -56,6 +56,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="CLASSES\ClientSocketConnection.cs" />
+    <Compile Include="CLASSES\DadosGerais.cs" />
     <Compile Include="CLASSES\ServerSocketConnection.cs" />
     <Compile Include="UserControls\UscInicio.xaml.cs">
       <DependentUpon>UscInicio.xaml</DependentUpon>
@@ -113,6 +114,9 @@
   <ItemGroup>
     <Resource Include="Imagens\send.png" />
     <Resource Include="Imagens\seta.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Imagens\power-off.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
