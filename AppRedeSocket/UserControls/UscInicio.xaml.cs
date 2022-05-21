@@ -52,13 +52,15 @@ namespace AppRedeSocket.UserControls
         {
             if (txtCampoChat.Text != "")
             {
-                Run runNome = new Run("\r\n" + (txtNome.Text != "" ? txtNome.Text : "Usuario" + "1") + " - ");
-                runNome.Foreground = Brushes.Azure;
 
-                txtChat.Inlines.Add(runNome);
+                DadosGerais.clientSocketConnection.SendRequest(txtCampoChat.Text);
+                //Run runNome = new Run("\r\n" + (txtNome.Text != "" ? txtNome.Text : "Usuario" + "1") + " - ");
+                //runNome.Foreground = Brushes.Azure;
 
-                //escreve a mensagem
-                txtChat.Text += txtCampoChat.Text;
+                //txtChat.Inlines.Add(runNome);
+
+                ////escreve a mensagem
+                //txtChat.Text += txtCampoChat.Text;
 
                 txtCampoChat.Text = "";
                 svChat.ScrollToEnd();
@@ -127,6 +129,20 @@ namespace AppRedeSocket.UserControls
                 DadosGerais.serverSocketConnection.CloseAllSockets();
                 MessageBox.Show(ex.Message, "Error",  MessageBoxButton.OK);
 
+            }
+        }
+
+        private void brdDesconectar_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                DadosGerais.clientSocketConnection.Exit();
+                DadosGerais.serverSocketConnection.CloseAllSockets();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
             }
         }
     }

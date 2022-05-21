@@ -8,6 +8,7 @@
              Height="450" Width="800" KeyUp="UserControl_KeyUp">
     <Grid Background="#FF686868">
 
+        
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="51*"/>
@@ -104,7 +105,7 @@
                     <TextBlock Foreground="White" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center">Conectar</TextBlock>
                 </Border>
                 <!--BOTÃO DESCONECTAR-->
-                <Border Grid.Row="3" Grid.Column="4" Width="200" HorizontalAlignment="Right" Background="#FFAB5858" CornerRadius="15">
+                <Border x:Name="brdDesconectar" Grid.Row="3" Grid.Column="4" Width="200" HorizontalAlignment="Right" Background="#FFAB5858" CornerRadius="15" MouseUp="brdDesconectar_MouseUp">
                     <TextBlock Foreground="White"
                                FontSize="24" 
                                FontWeight="Bold"
@@ -177,7 +178,7 @@
 
                         </Border>
 
-                        <Image x:Name="imgBtnEnviar" Grid.Column="1" Source="/Socket;component/Imagens/send.png" MouseUp="imgBtnEnviar_MouseUp" Margin="0,0,0,1.8" HorizontalAlignment="Right" Width="31"/>
+                        <Image x:Name="imgBtnEnviar" Grid.Column="1" MouseUp="imgBtnEnviar_MouseUp" HorizontalAlignment="Right" Source="/AppRedeSocket;component/Imagens/send.png" />
                     </Grid>
                 </Grid>
 

@@ -12,5 +12,8 @@ namespace AppRedeSocket.CLASSES
         public static List<Socket> clientSockets = new List<Socket>();
         public static ServerSocketConnection serverSocketConnection;
         public static ClientSocketConnection clientSocketConnection;
+    
+    
+
     }
 }

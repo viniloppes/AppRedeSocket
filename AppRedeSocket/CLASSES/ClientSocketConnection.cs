@@ -5,13 +5,14 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace AppRedeSocket.CLASSES
 {
     public class ClientSocketConnection
     {
         public Socket _clientSocketServer { get; set; }
-        
+
 
         public ClientSocketConnection(Socket socketServer)
         {
@@ -70,7 +71,7 @@ namespace AppRedeSocket.CLASSES
         /// <summary>
         /// Close socket and exit program.
         /// </summary>
-        private void Exit()
+        public void Exit()
         {
             SendString("exit"); // Tell the server we are exiting
             _clientSocketServer.Shutdown(SocketShutdown.Both);
@@ -84,10 +85,10 @@ namespace AppRedeSocket.CLASSES
             //string request = Console.ReadLine();
             SendString(mensagem);
 
-            if (mensagem.ToLower() == "exit")
-            {
-                Exit();
-            }
+            //if (mensagem.ToLower() == "exit")
+            //{
+            //    Exit();
+            //}
         }
 
         /// <summary>
@@ -101,13 +102,23 @@ namespace AppRedeSocket.CLASSES
 
         public string ReceiveResponse()
         {
-            var buffer = new byte[2048];
-            int received = _clientSocketServer.Receive(buffer, SocketFlags.None);
-            if (received == 0) return "";
-            var data = new byte[received];
-            Array.Copy(buffer, data, received);
-            string text = Encoding.ASCII.GetString(data);
-            return text;
+            try
+            {
+                var buffer = new byte[2048];
+                int received = _clientSocketServer.Receive(buffer, SocketFlags.None);
+                if (received == 0) return "";
+                var data = new byte[received];
+                Array.Copy(buffer, data, received);
+                string text = Encoding.ASCII.GetString(data);
+                return text;
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
+                return "";
+            }
+
             //Console.WriteLine(text);
         }
     }

@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace AppRedeSocket.CLASSES
 {
@@ -15,6 +16,8 @@ namespace AppRedeSocket.CLASSES
         private static readonly List<Socket> clientSockets = new List<Socket>();
         private const int BUFFER_SIZE = 2048;
         private static readonly byte[] buffer = new byte[BUFFER_SIZE];
+
+        public static List<string> mensagensRecebidas;
 
         public ServerSocketConnection(Socket socketServer)
         {
@@ -38,7 +41,7 @@ namespace AppRedeSocket.CLASSES
             _socketServer.Bind(new IPEndPoint(IPAddress.Parse(ipAddress), int.Parse(port)));
             _socketServer.Listen(0);
             _socketServer.BeginAccept(AcceptCallback, null);
-            //Console.WriteLine("Server setup complete");
+           
         }
 
         /// <summary>
@@ -72,7 +75,7 @@ namespace AppRedeSocket.CLASSES
             clientSockets.Add(socket);
             DadosGerais.clientSockets.Add(socket);
             socket.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, socket);
-            //Console.WriteLine("Client connected, waiting for request...");
+
             _socketServer.BeginAccept(AcceptCallback, null);
         }
 
@@ -85,10 +88,9 @@ namespace AppRedeSocket.CLASSES
             {
                 received = current.EndReceive(AR);
             }
-            catch (SocketException)
+            catch (SocketException ex)
             {
-                Console.WriteLine("Client forcefully disconnected");
-                // Don't shutdown because the socket may be disposed and its disconnected anyway.
+                MessageBox.Show(ex.Message, "Error",  MessageBoxButton.OK);
                 current.Close();
                 clientSockets.Remove(current);
                 return;
@@ -97,14 +99,13 @@ namespace AppRedeSocket.CLASSES
             byte[] recBuf = new byte[received];
             Array.Copy(buffer, recBuf, received);
             string text = Encoding.ASCII.GetString(recBuf);
-            Console.WriteLine("Received Text: " + text);
 
             if (text.ToLower() == "get time") // Client requested time
             {
-                Console.WriteLine("Text is a get time request");
+                
                 byte[] data = Encoding.ASCII.GetBytes(DateTime.Now.ToLongTimeString());
                 current.Send(data);
-                Console.WriteLine("Time sent to client");
+                
             }
             else if (text.ToLower() == "exit") // Client wants to exit gracefully
             {
@@ -112,15 +113,13 @@ namespace AppRedeSocket.CLASSES
                 current.Shutdown(SocketShutdown.Both);
                 current.Close();
                 clientSockets.Remove(current);
-                Console.WriteLine("Client disconnected");
+                //Console.WriteLine("Client disconnected");
                 return;
             }
             else
             {
-                Console.WriteLine("Text is an invalid request");
-                byte[] data = Encoding.ASCII.GetBytes("Invalid request");
+                byte[] data = Encoding.ASCII.GetBytes(text);
                 current.Send(data);
-                Console.WriteLine("Warning Sent");
             }
 
             current.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, current);

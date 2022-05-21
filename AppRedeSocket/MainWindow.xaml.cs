@@ -50,8 +50,6 @@ namespace AppRedeSocket
             {
                 
                 uscServidor.OnVoltar += UscServidor_OnVoltar;
-
-
                 OcultaTodasTelas();
                 ExibeTela(ENUM_TELA.USC_INICIO);
                 try
@@ -64,9 +62,6 @@ namespace AppRedeSocket
                 {
 
                 }
-
-
-
             }
             catch (Exception ex)
             {
