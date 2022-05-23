@@ -6,7 +6,176 @@
              xmlns:local="clr-namespace:AppRedeSocket.UserControls"
              mc:Ignorable="d" 
                 Height="450" Width="800">
+
+
     <Grid Background="#FF686868">
+
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="51*"/>
+                <RowDefinition Height="152*"/>
+                <RowDefinition Height="246*"/>
+            </Grid.RowDefinitions>
+
+       
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="81*"/>
+                    <ColumnDefinition Width="187*"/>
+                    <ColumnDefinition Width="103*"/>
+                    <ColumnDefinition Width="116*"/>
+                    <ColumnDefinition Width="294*"/>
+                    <ColumnDefinition Width="19*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="3*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="3*"/>
+                    <RowDefinition Height="2*"/>
+                </Grid.RowDefinitions>
+                <Image Margin="5" x:Name="imgVoltar" HorizontalAlignment="Center"  MouseUp="imgVoltar_MouseUp" Width="30" Source="/AppRedeSocket;component/Imagens/seta.png"/>
+
+
+                <!--LABEL IP-->
+                <TextBlock Grid.Row="1" 
+                           FontSize="15" 
+                           Foreground="White" 
+                           FontWeight="Bold" 
+                           Margin="0,7.8,4.8,8.4" 
+                           HorizontalAlignment="Right" Width="15" VerticalAlignment="Center" Height="19" >
+                    Ip
+                </TextBlock>
+                <TextBox Margin="5.2,4.8,4,4.4" 
+                         Grid.Row="1" 
+                         x:Name="txtIp"
+                         Grid.Column="1" 
+                         Foreground="#FFE5E6D9"
+                         Background="#FF2D2D30" FontSize="20">
+                    abc
+                </TextBox>
+
+
+                <Border x:Name="btnConectarUsuario" 
+                        CornerRadius="15" 
+                        Grid.ColumnSpan="2"
+                        Grid.Column="1" Background="#FF3730A2" Grid.Row="3" MouseUp="btnConectarUsuario_MouseUp">
+                    <TextBlock FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" >
+                        Conectar como usuario
+                    </TextBlock>
+                </Border>
+
+
+                <!--LABEL PORTA-->
+                <TextBlock Grid.Row="1" 
+                           FontSize="15"
+                           Grid.Column="2"
+                           Foreground="White" 
+                           FontWeight="Bold" 
+                           Margin="0,7.8,4.2,7.4" 
+                           HorizontalAlignment="Right" VerticalAlignment="Center" Height="20" Width="38">
+                    Porta
+                </TextBlock>
+
+                <!--CAMPO PORTA-->
+                <TextBox Margin="5.8,4.8,6.2,4.4" 
+                         Grid.Row="1" 
+                         Grid.Column="3" 
+                         x:Name="txtPorta"
+                         Foreground="#FFE5E6D9"
+                         Background="#FF2D2D30" FontSize="20">
+                    abc
+                </TextBox>
+
+
+                <!--BOTÃO CONECTAR-->
+                <Border 
+                    x:Name="brdConectar"
+                    Grid.Row="1" 
+                    Grid.Column="4" 
+                    Width="200" 
+                    HorizontalAlignment="Right" 
+                    Background="#FF58AB65" 
+                    CornerRadius="15" MouseUp="brdConectar_MouseUp">
+                    <TextBlock Foreground="White" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center">Conectar</TextBlock>
+                </Border>
+                <!--BOTÃO DESCONECTAR-->
+                <Border x:Name="brdDesconectar" Grid.Row="3" Grid.Column="4" Width="200" HorizontalAlignment="Right" Background="#FFAB5858" CornerRadius="15" MouseUp="brdDesconectar_MouseUp">
+                    <TextBlock Foreground="White"
+                               FontSize="24" 
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center">
+                        Desconectar
+
+                    </TextBlock>
+                </Border>
+            </Grid>
+            <Grid Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="27*"/>
+                    <RowDefinition Height="185*"/>
+                    <RowDefinition Height="34*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="27*"/>
+                    <ColumnDefinition Width="160*"/>
+                    <ColumnDefinition Width="106.4"/>
+                    <ColumnDefinition Width="107*"/>
+                    <ColumnDefinition Width="53*"/>
+                </Grid.ColumnDefinitions>
+                <Border
+                            Background="#FF2D2D30"
+                            CornerRadius="15"
+                        Grid.Column="1"
+                    Grid.Row="1"
+                        >
+
+                    <ScrollViewer x:Name="svChat">
+                        <StackPanel x:Name="stpChat" >
+                            <TextBlock Margin="5" 
+                                   x:Name="txtChat" 
+                                   Foreground="White" 
+                                    
+                                   FontSize="20">
+                                Matheus
+
+                            </TextBlock>
+
+                        </StackPanel>
+                    </ScrollViewer>
+
+                </Border>
+
+                <Border
+                            Background="#FF2D2D30"
+                            CornerRadius="15"
+                        Grid.Column="3"
+                    Grid.Row="1"
+                        >
+
+                    <ScrollViewer x:Name="svUsuOnline">
+                        <StackPanel x:Name="stpUsuOnline" >
+                            <TextBlock Margin="5" 
+                                   x:Name="txtUsuOnline" 
+                                   Foreground="White" 
+                                   FontSize="20">
+                                Matheus
+
+                            </TextBlock>
+
+                        </StackPanel>
+                    </ScrollViewer>
+
+                </Border>
+            </Grid>
+        </Grid>
+
+
+
+    </Grid>
+</UserControl>
+<!--<Grid Background="#FF686868">
         <Grid >
             <Grid.RowDefinitions>
                 <RowDefinition Height="2*"/>
@@ -19,7 +188,6 @@
                     <RowDefinition Height="272*"/>
                     <RowDefinition Height="67*"/>
                 </Grid.RowDefinitions>
-                <Image Margin="10,10,0,10.4" x:Name="imgVoltar" HorizontalAlignment="Left"  MouseUp="imgVoltar_MouseUp" Width="30" Source="/AppRedeSocket;component/Imagens/seta.png"/>
 
                 <Grid Margin="0,0,0,0.4">
                     <Grid.ColumnDefinitions>
@@ -46,63 +214,26 @@
                     </TextBlock>
                 </Grid>
 
-                <!--GRID LOG SERVIDOR-->
+                -->
+<!--GRID LOG SERVIDOR-->
+<!--
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="40*"/>
                         <ColumnDefinition Width="361*"/>
                         <ColumnDefinition Width="399*"/>
                     </Grid.ColumnDefinitions>
-                    <Border
-                            Background="#FF2D2D30"
-                            CornerRadius="15"
-                        Grid.Column="1"
-                        >
-
-                        <ScrollViewer x:Name="svChat">
-                            <StackPanel x:Name="stpChat" >
-                                <TextBlock Margin="5" 
-                                   x:Name="txtChat" 
-                                   Foreground="White" 
-                                    
-                                   FontSize="20">
-                                Matheus
-
-                                </TextBlock>
-
-                            </StackPanel>
-                        </ScrollViewer>
-
-                    </Border>
-
-                    <!--GRID USUARIOS ONLINE-->
+                    
+                    -->
+<!--GRID USUARIOS ONLINE-->
+<!--
                     <Grid Grid.Column="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="21*"/>
                             <ColumnDefinition Width="156*"/>
                             <ColumnDefinition Width="23*"/>
                         </Grid.ColumnDefinitions>
-                        <Border
-                            Background="#FF2D2D30"
-                            CornerRadius="15"
-                        Grid.Column="1"
-                        >
-
-                            <ScrollViewer x:Name="svUsuOnline">
-                                <StackPanel x:Name="stpUsuOnline" >
-                                    <TextBlock Margin="5" 
-                                   x:Name="txtUsuOnline" 
-                                   Foreground="White" 
-                                    
-                                   FontSize="20">
-                                Matheus
-
-                                    </TextBlock>
-
-                                </StackPanel>
-                            </ScrollViewer>
-
-                        </Border>
+                
                     </Grid>
 
                 </Grid>
@@ -110,4 +241,4 @@
             </Grid>
         </Grid>
     </Grid>
-</UserControl>
+</UserControl>-->

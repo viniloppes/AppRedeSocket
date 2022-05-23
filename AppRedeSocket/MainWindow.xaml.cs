@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AppRedeSocket.CLASSES;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +12,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -34,24 +37,30 @@ namespace AppRedeSocket
 
 
         public ENUM_TELA telaAtual = ENUM_TELA.USC_NENHUM;
-
+        public int toutEnviaRecebimento;
 
         public enum ENUM_TELA
         {
             USC_NENHUM,
             USC_INICIO,
-            USC_SERVIDOR
-
+            USC_SERVIDOR,
+            USC_MENU
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             try
             {
-                
+
                 uscServidor.OnVoltar += UscServidor_OnVoltar;
+
+                DadosGerais.OnEnviaMensagem += DadosGerais_OnEnviaMensagem;
+                uscServidor.OnUsuario += UscServidor_OnUsuario;
+                uscMenu.OnCliente += UscMenu_OnCliente;
+                uscMenu.OnServidor += UscMenu_OnServidor;
+                txtMensagemLog.Text = "";
                 OcultaTodasTelas();
-                ExibeTela(ENUM_TELA.USC_INICIO);
+                ExibeTela(ENUM_TELA.USC_MENU);
                 try
                 {
                     dispatcherTimer.Tick += DispatcherTimer_Tick;
@@ -65,7 +74,56 @@ namespace AppRedeSocket
             }
             catch (Exception ex)
             {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
+
+            }
+        }
+
+        private void UscMenu_OnServidor()
+        {
+            try
+            {
+                ExibeTela(ENUM_TELA.USC_SERVIDOR);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
+
+            }
+        }
+
+        private void UscMenu_OnCliente()
+        {
+            try
+            {
+                ExibeTela(ENUM_TELA.USC_INICIO);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
+
+            }
+        }
+
+        private void UscServidor_OnUsuario(string ip, string porta)
+        {
+            try
+            {
+
+                string json = @"{
+  
+    'ip': '" + ip + @"',
+   'porta': '" + porta + @"',
+  
+}";
+
+                JObject rss = JObject.Parse(json);
+                ExibeTela(ENUM_TELA.USC_INICIO, rss);
+            }
+            catch (Exception ex)
+            {
                 MessageBox.Show("Error", ex.Message, MessageBoxButton.OK);
+
             }
         }
 
@@ -86,8 +144,9 @@ namespace AppRedeSocket
         {
             uscInicio.Visibility = Visibility.Hidden;
             uscServidor.Visibility = Visibility.Hidden;
+            uscMenu.Visibility = Visibility.Hidden;
         }
-        public void OcultaTela(ENUM_TELA tela)
+        public void OcultaTela(ENUM_TELA tela, object obj = null)
         {
             try
             {
@@ -101,6 +160,10 @@ namespace AppRedeSocket
                         OcultaTodasTelas();
                         uscServidor.Finaliza();
                         break;
+                    case ENUM_TELA.USC_MENU:
+                        OcultaTodasTelas();
+                        uscMenu.Finaliza();
+                        break;
                 }
             }
             catch (Exception ex)
@@ -110,7 +173,7 @@ namespace AppRedeSocket
             }
         }
 
-        public void ExibeTela(ENUM_TELA tela)
+        public void ExibeTela(ENUM_TELA tela, JObject jObj = null)
         {
             try
             {
@@ -118,7 +181,15 @@ namespace AppRedeSocket
                 {
                     case ENUM_TELA.USC_INICIO:
                         OcultaTela(telaAtual);
-                        uscInicio.Inicializa();
+                        if (jObj != null)
+                        {
+                            uscInicio.Inicializa(jObj["ip"].ToObject<string>(), jObj["porta"].ToObject<string>());
+                        }
+                        else
+                        {
+                            uscInicio.Inicializa();
+
+                        }
                         uscInicio.UpdateLayout();
                         uscInicio.Visibility = Visibility.Visible;
                         break;
@@ -127,6 +198,12 @@ namespace AppRedeSocket
                         uscServidor.Inicializa();
                         uscServidor.UpdateLayout();
                         uscServidor.Visibility = Visibility.Visible;
+                        break;
+                    case ENUM_TELA.USC_MENU:
+                        OcultaTela(telaAtual);
+                        uscMenu.Inicializa();
+                        uscMenu.UpdateLayout();
+                        uscMenu.Visibility = Visibility.Visible;
                         break;
                 }
 
@@ -163,6 +240,38 @@ namespace AppRedeSocket
             {
                 try
                 {
+                    if (DadosGerais.toutEnviaRecebimentoServidor > 0)
+                    {
+                        if (--DadosGerais.toutEnviaRecebimentoServidor == 0)
+                        {
+                            DadosGerais.EnviaToutRecebimentoServidor();
+
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+
+
+                }
+                try
+                {
+                    if (DadosGerais.toutEnviaRecebimento > 0)
+                    {
+                        if (--DadosGerais.toutEnviaRecebimento == 0)
+                        {
+                            DadosGerais.EnviaToutRecebimento();
+
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+
+
+                }
+                try
+                {
                     if (toutSenhaServidor > 0)
                     {
 
@@ -186,6 +295,56 @@ namespace AppRedeSocket
                 {
 
                 }
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            try
+            {
+                if(DadosGerais.serverSocketConnection != null)
+                {
+                    DadosGerais.serverSocketConnection.CloseAllSockets();
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+        private void DadosGerais_OnEnviaMensagem(string mensagem)
+        {
+            try
+            {
+                txtMensagemLog.Text = mensagem;
+                Storyboard sb = FindResource("StbTxtMensagemLog") as Storyboard;
+                sb.Pause();
+                sb.BeginTime = new TimeSpan(0, 0, 0, 0);
+                sb.Begin();
+            }
+            catch (Exception ex)
+            {
+           
+                //MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
+
+            }
+        }
+        private void Storyboard_Completed(object sender, EventArgs e)
+        {
+            try
+            {
+                Storyboard sb = FindResource("StbTxtMensagemLog") as Storyboard;
+
+                sb.Pause();
+                sb.Stop();
+                txtMensagemLog.Opacity = 0;
 
             }
             catch (Exception ex)

@@ -13,11 +13,21 @@ namespace AppRedeSocket.CLASSES
     {
         public Socket _socketServer { get; set; }
 
-        private static readonly List<Socket> clientSockets = new List<Socket>();
+        public static readonly List<Socket> clientSockets = new List<Socket>();
         private const int BUFFER_SIZE = 2048;
         private static readonly byte[] buffer = new byte[BUFFER_SIZE];
 
         public static List<string> mensagensRecebidas;
+
+        public static bool MensagemPendente { get; set; }
+
+        private List<string> arrayReceiveResponse = new List<string>();
+
+        //public List<string> ArrayReceiveResponse
+        //{
+        //    get { return arrayReceiveResponse; }
+        //    set { arrayReceiveResponse = value; }
+        //}
 
         public ServerSocketConnection(Socket socketServer)
         {
@@ -41,8 +51,10 @@ namespace AppRedeSocket.CLASSES
             _socketServer.Bind(new IPEndPoint(IPAddress.Parse(ipAddress), int.Parse(port)));
             _socketServer.Listen(0);
             _socketServer.BeginAccept(AcceptCallback, null);
-           
+
         }
+
+
 
         /// <summary>
         /// Close all connected client (we do not need to shutdown the server socket as its connections
@@ -50,10 +62,13 @@ namespace AppRedeSocket.CLASSES
         /// </summary>
         public void CloseAllSockets()
         {
-            foreach (Socket socket in clientSockets)
+            if (clientSockets.Count != 0)
             {
-                socket.Shutdown(SocketShutdown.Both);
-                socket.Close();
+                foreach (Socket socket in clientSockets)
+                {
+                    socket.Shutdown(SocketShutdown.Both);
+                    socket.Close();
+                }
             }
 
             _socketServer.Close();
@@ -75,8 +90,10 @@ namespace AppRedeSocket.CLASSES
             clientSockets.Add(socket);
             DadosGerais.clientSockets.Add(socket);
             socket.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, socket);
-
+            DadosGerais.EnviaMensagem("Cliente conectado, esperando por conexão...");
             _socketServer.BeginAccept(AcceptCallback, null);
+
+
         }
 
         private static void ReceiveCallback(IAsyncResult AR)
@@ -90,7 +107,7 @@ namespace AppRedeSocket.CLASSES
             }
             catch (SocketException ex)
             {
-                MessageBox.Show(ex.Message, "Error",  MessageBoxButton.OK);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
                 current.Close();
                 clientSockets.Remove(current);
                 return;
@@ -100,27 +117,40 @@ namespace AppRedeSocket.CLASSES
             Array.Copy(buffer, recBuf, received);
             string text = Encoding.ASCII.GetString(recBuf);
 
-            if (text.ToLower() == "get time") // Client requested time
-            {
-                
-                byte[] data = Encoding.ASCII.GetBytes(DateTime.Now.ToLongTimeString());
-                current.Send(data);
-                
-            }
-            else if (text.ToLower() == "exit") // Client wants to exit gracefully
+            //if (text.ToLower() == "get time") // Client requested time
+            //{
+
+            //    byte[] data = Encoding.ASCII.GetBytes(DateTime.Now.ToLongTimeString());
+            //    current.Send(data);
+
+            //}
+            //else
+
+
+            if (text.ToLower() == "exit") // Client wants to exit gracefully
             {
                 // Always Shutdown before closing
                 current.Shutdown(SocketShutdown.Both);
                 current.Close();
                 clientSockets.Remove(current);
+                DadosGerais.RetornoServidor("Um cliente desconectado");
                 //Console.WriteLine("Client disconnected");
+                DadosGerais.EnviaMensagem("Cliente Desconectado");
                 return;
             }
-            else
+            //else
+            //{
+            byte[] data = Encoding.ASCII.GetBytes(text);
+
+            foreach (Socket currentClient in clientSockets)
             {
-                byte[] data = Encoding.ASCII.GetBytes(text);
-                current.Send(data);
+                currentClient.Send(data);
             }
+            DadosGerais.listaMensagensServer.Add(text);
+            DadosGerais.RetornoServidor(text);
+
+            //MensagemPendente = true;
+            //}
 
             current.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, current);
         }

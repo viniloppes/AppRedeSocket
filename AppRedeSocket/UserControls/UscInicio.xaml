@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:AppRedeSocket.UserControls"
              mc:Ignorable="d" 
              Height="450" Width="800" KeyUp="UserControl_KeyUp">
+
     <Grid Background="#FF686868">
 
         
@@ -16,6 +17,7 @@
                 <RowDefinition Height="246*"/>
             </Grid.RowDefinitions>
 
+        
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="81*"/>

@@ -11,13 +11,20 @@ namespace AppRedeSocket.CLASSES
 {
     public class ClientSocketConnection
     {
-        public Socket _clientSocketServer { get; set; }
-
+        private Socket _clientSocketServer { get; set; }
+        private const int BUFFER_SIZE = 2048;
+        private static readonly byte[] buffer = new byte[BUFFER_SIZE];
 
         public ClientSocketConnection(Socket socketServer)
         {
             _clientSocketServer = socketServer;
         }
+
+        public static List<string> arrayReceiveResponse { get; set; }
+
+    
+
+        //public static List<string> arrayReceiveResponse = new List<string>();
 
 
 
@@ -44,6 +51,8 @@ namespace AppRedeSocket.CLASSES
 
                     // Change IPAddress.Loopback to a remote IP to connect to a remote host.
                     _clientSocketServer.Connect(IPAddress.Parse(ipAddress), porta);
+                    _clientSocketServer.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveResponse, _clientSocketServer);
+
                 }
                 catch (SocketException)
                 {
@@ -57,16 +66,7 @@ namespace AppRedeSocket.CLASSES
             return true;
         }
 
-        public void RequestLoop()
-        {
-            //Console.WriteLine(@"<Type ""exit"" to properly disconnect client>");
-
-            //while (true)
-            //{
-            SendRequest("abc");
-            ReceiveResponse();
-            //}
-        }
+     
 
         /// <summary>
         /// Close socket and exit program.
@@ -100,23 +100,32 @@ namespace AppRedeSocket.CLASSES
             _clientSocketServer.Send(buffer, 0, buffer.Length, SocketFlags.None);
         }
 
-        public string ReceiveResponse()
+  
+
+
+        private static void ReceiveResponse(IAsyncResult AR)
         {
             try
             {
+                Socket current = (Socket)AR.AsyncState;
                 var buffer = new byte[2048];
-                int received = _clientSocketServer.Receive(buffer, SocketFlags.None);
-                if (received == 0) return "";
+                int received = current.Receive(buffer, SocketFlags.None);
+                if (received == 0) return;
                 var data = new byte[received];
                 Array.Copy(buffer, data, received);
                 string text = Encoding.ASCII.GetString(data);
-                return text;
+                DadosGerais.RecebeRespostaCliente(text);
+                DadosGerais.listaMensagens.Add(text);
+                //arrayReceiveResponse.Add(text);
+                //ServerSocketConnection.MensagemPendente = false;
+                //return AR;
+                current.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveResponse, current);
+
             }
             catch (Exception ex)
             {
 
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK);
-                return "";
             }
 
             //Console.WriteLine(text);
